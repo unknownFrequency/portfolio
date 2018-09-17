@@ -1,18 +1,20 @@
 class PortfoliosController < ApplicationController
+  before_action :set_portfolio, only: [:show, :edit, :new, :destroy]
+
   def index
-    @portfolio_items = Portfolio.all
+    @portfolios = Portfolio.all
   end
 
   def new
-    @portfolio_item = Portfolio.new
+    @portfolio = Portfolio.new
   end
 
   def create
-    @portfolio_item = Portfolio.new portfolio_params
+    @portfolio = Portfolio.new portfolio_params
 
     respond_to do |format|
-      if @portfolio_item.save
-        format.html { redirect_to @portfolio_item, notice: "Portfolio created succesfully!" }
+      if @portfolio.save
+        format.html { redirect_to @portfolio, notice: "Portfolio created succesfully!" }
       else
         format.html { render :new }
       end
@@ -20,28 +22,38 @@ class PortfoliosController < ApplicationController
   end
 
   def show
-    @portfolio_item = Portfolio.find params[:id]
   end
 
   def edit
-    @portfolio_item = Portfolio.find params[:id]
   end
 
   def update
     respond_to do |format|
-      @portfolio_item = Portfolio.find params[:id]
+      @portfolio = Portfolio.find params[:id]
 
-      if @portfolio_item.update(portfolio_params)
-        format.html { redirect_to @portfolio_item, notice: 'Post was successfully updated.' }
-        format.json { render :show, status: :ok, location: @portfolio_item }
+      if @portfolio.update(portfolio_params)
+        format.html { redirect_to @portfolio, notice: 'Post was successfully updated.' }
+        format.json { render :show, status: :ok, location: @portfolio }
       else
         format.html { render :edit }
-        format.json { render json: @portfolio_item.errors, status: :unprocessable_entity }
+        format.json { render json: @portfolio.errors, status: :unprocessable_entity }
       end
     end
   end
 
+  def destroy
+    @portfolio.destroy
+    respond_to do |format|
+      format.html { redirect_to portfolios_url, notice: 'Portfolio was successfully destroyed.' }
+      format.json { head :no_content }
+    end
+  end
+
   private
+
+  def set_portfolio
+    @portfolio = Portfolio.find params[:id]
+  end
 
   def portfolio_params
     params.require(:portfolio).permit(:title, :subtitle, :body, :main_image, :thumb_image) 
