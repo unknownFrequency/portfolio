@@ -1,5 +1,5 @@
 class PortfoliosController < ApplicationController
-  before_action :set_portfolio, only: [:show, :edit, :new, :destroy]
+  before_action :set_portfolio, only: [:show, :edit, :destroy]
 
   def index
     @portfolios = Portfolio.all
@@ -14,7 +14,7 @@ class PortfoliosController < ApplicationController
 
     respond_to do |format|
       if @portfolio.save
-        format.html { redirect_to @portfolio, notice: "Portfolio created succesfully!" }
+        format.html { redirect_to portfolio_show_path(@portfolio), notice: "Portfolio created succesfully!" }
       else
         format.html { render :new }
       end
